@@ -1,0 +1,32 @@
+import java.net.*;
+import java.io.*;
+
+public class Main {
+    public static void main(String[] args) throws Exception {
+
+        Socket client = new Socket("localhost", 8080);
+
+        String httpRequest =
+            "GET / HTTP/1.1\r\n" +
+            "Host: localhost\r\n" +
+            "Connection: close\r\n" +
+            "\r\n";
+
+        PrintWriter out = new PrintWriter(client.getOutputStream(), true);
+        out.print(httpRequest);
+        out.flush();
+
+        BufferedReader in = new BufferedReader(
+            new InputStreamReader(client.getInputStream()));
+
+        String response;
+
+        System.out.println("--- Received HTTP Response ---");
+
+        while ((response = in.readLine()) != null) {
+            System.out.println(response);
+        }
+
+        client.close();
+    }
+}

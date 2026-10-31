@@ -1,0 +1,29 @@
+import java.net.*;
+import java.io.*;
+public class Main {
+    public static void main(String[] args) throws Exception {
+        ServerSocket server = new ServerSocket(8080);
+        System.out.println("HTTP Server running on http://localhost:8080 ...");
+        while (true) {
+            Socket conn = server.accept();
+            BufferedReader in = new BufferedReader(
+                new InputStreamReader(conn.getInputStream()));
+            String request;
+            System.out.println("--- Received HTTP Request ---");
+            while ((request = in.readLine()) != null && !request.isEmpty()) {
+                System.out.println(request);
+            }
+            PrintWriter out = new PrintWriter(conn.getOutputStream());
+            String response =
+                "<html><body><h1>welcome to Computer networks Lab!</h1></body></html>";
+            out.print("HTTP/1.1 200 OK\r\n");
+            out.print("Content-Type: text/html; charset=utf-8\r\n");
+            out.print("Content-Length: " + response.getBytes("UTF-8").length + "\r\n");
+            out.print("Connection: close\r\n");
+            out.print("\r\n");
+            out.print(response);
+            out.flush();
+            conn.close();
+        }
+    }
+}
